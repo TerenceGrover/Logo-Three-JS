@@ -3,6 +3,14 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js'
 
+/* Storing user's device details in a variable*/
+const details = navigator.userAgent;
+  
+const regexp = /android|iphone|kindle|ipad/i;
+
+/* Using test() method to search regexp in details
+it returns boolean value*/
+const isMobileDevice = regexp.test(details);
 
 /**
  * Base
@@ -33,7 +41,7 @@ gltfLoader.load(
 /**
  * Lights
  */
-const ambientLight = new THREE.AmbientLight(0xffffff, 2)
+const ambientLight = new THREE.AmbientLight(0xffffff, 3)
 scene.add(ambientLight)
 
 const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8)
@@ -99,9 +107,15 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 let mouseX, lastMouseX
 let mouseXDelta = Math.abs(mouseX - lastMouseX)
 
-canvas.addEventListener('mousemove', (event) => {
-    mouseX = (event.clientX / sizes.width) * 2 - 1
-})
+if (!isMobileDevice){
+    canvas.addEventListener('mousemove', (event) => {
+        mouseX = (event.clientX / sizes.width) * 2 - 1
+    })
+}else {
+    canvas.addEventListener('touchmove', (event) => {
+        mouseX = (e.changedTouches[0].clientX / sizes.width) * 2 - 1
+    })
+}
 
 
 // Controls
